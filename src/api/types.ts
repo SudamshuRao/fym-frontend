@@ -50,3 +50,24 @@ export interface RemainingOut {
   target_fat: number;
   target_cal: number;
 }
+
+// Mirrors app/core/budget_split.py's SplitMode exactly.
+export type SplitMode = "full" | "partial" | "meals";
+
+// Mirrors app/schemas/standalone.py exactly.
+export interface StandaloneBudgetOut {
+  protein: number;
+  carb: number;
+  fat: number;
+  cal: number;
+}
+
+export interface AddToDailyOut {
+  logged_entry_id: string;
+  has_daily_target: boolean;
+  remaining_protein: number | null;
+  remaining_carb: number | null;
+  remaining_fat: number | null;
+  remaining_cal: number | null;
+  message: string;
+}

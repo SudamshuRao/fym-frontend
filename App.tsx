@@ -12,6 +12,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import DailyTargetScreen from "./src/screens/DailyTargetScreen";
 import LogFoodScreen from "./src/screens/LogFoodScreen";
 import TodaysFoodLogScreen from "./src/screens/TodaysFoodLogScreen";
+import StandaloneScreen from "./src/screens/StandaloneScreen";
 import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
@@ -49,6 +50,11 @@ function RootNavigator() {
             name="TodaysFoodLog"
             component={TodaysFoodLogScreen}
             options={{ headerShown: true, title: "Today's Log" }}
+          />
+          <Stack.Screen
+            name="Standalone"
+            component={StandaloneScreen}
+            options={{ headerShown: true, title: "Quick Calculator" }}
           />
         </>
       ) : (
