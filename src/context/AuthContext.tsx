@@ -7,6 +7,7 @@ const TOKEN_STORAGE_KEY = "fym_access_token";
 
 interface AuthContextValue {
   user: UserOut | null;
+  token: string | null; // needed by every screen that calls an authenticated endpoint
   isLoading: boolean; // true only during the initial "restore session" check
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserOut | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (savedToken) {
           const me = await authApi.getMe(savedToken);
           setUser(me);
+          setToken(savedToken);
         }
       } catch {
         // Saved token is invalid/expired - clear it and just show the login screen.
@@ -44,10 +47,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function login(email: string, password: string) {
     setError(null);
     try {
-      const token = await authApi.login(email, password);
-      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token.access_token);
-      const me = await authApi.getMe(token.access_token);
+      const tokenResponse = await authApi.login(email, password);
+      await AsyncStorage.setItem(TOKEN_STORAGE_KEY, tokenResponse.access_token);
+      const me = await authApi.getMe(tokenResponse.access_token);
       setUser(me);
+      setToken(tokenResponse.access_token);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Login failed");
       throw e;
@@ -71,10 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function logout() {
     await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
     setUser(null);
+    setToken(null);
   }
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, error, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, error, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,16 +1,6 @@
 import { API_BASE_URL } from "./config";
-import { UserOut, Token, ApiError } from "./types";
-
-async function parseErrorMessage(response: Response): Promise<string> {
-  try {
-    const data: ApiError = await response.json();
-    if (typeof data.detail === "string") return data.detail;
-    if (Array.isArray(data.detail)) return data.detail.map((d) => d.msg).join(", ");
-  } catch {
-    // response wasn't JSON at all - fall through to generic message
-  }
-  return `Request failed with status ${response.status}`;
-}
+import { UserOut, Token } from "./types";
+import { parseErrorMessage } from "./errors";
 
 export async function register(email: string, password: string): Promise<UserOut> {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {

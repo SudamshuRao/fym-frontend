@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
+import DailyTargetScreen from "./src/screens/DailyTargetScreen";
 import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
@@ -30,7 +31,14 @@ function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="DailyTarget"
+            component={DailyTargetScreen}
+            options={{ headerShown: true, title: "Daily Target" }}
+          />
+        </>
       ) : (
         <>
           <Stack.Screen name="Login" component={LoginScreen} />

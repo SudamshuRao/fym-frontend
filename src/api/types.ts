@@ -14,3 +14,13 @@ export interface Token {
 export interface ApiError {
   detail: string | { msg: string }[];
 }
+
+// Mirrors app/schemas/daily_target.py exactly.
+export interface DailyTargetOut {
+  id: string;
+  protein: number;
+  carb: number;
+  fat: number;
+  cal: number;
+  updated_at: string;
+}
