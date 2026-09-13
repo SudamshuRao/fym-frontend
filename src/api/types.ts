@@ -24,3 +24,29 @@ export interface DailyTargetOut {
   cal: number;
   updated_at: string;
 }
+
+export type FoodLogSource = "logged" | "recommended";
+
+// Mirrors app/schemas/food_log.py exactly.
+export interface FoodLogOut {
+  id: string;
+  name: string;
+  source: FoodLogSource;
+  protein: number;
+  carb: number;
+  fat: number;
+  cal: number;
+  timestamp: string;
+  reverted: boolean;
+}
+
+export interface RemainingOut {
+  protein: number;
+  carb: number;
+  fat: number;
+  cal: number;
+  target_protein: number;
+  target_carb: number;
+  target_fat: number;
+  target_cal: number;
+}

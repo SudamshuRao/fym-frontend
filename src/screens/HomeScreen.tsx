@@ -2,29 +2,56 @@ import React, { useCallback, useState } from "react";
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../context/AuthContext";
-import { getDailyTarget } from "../api/dailyTarget";
-import { DailyTargetOut } from "../api/types";
+import { getRemaining } from "../api/foodLog";
+import { RemainingOut } from "../api/types";
 import { colors, spacing, type } from "../theme";
+
+function MacroStat({
+  remaining,
+  target,
+  label,
+  unit,
+}: {
+  remaining: number;
+  target: number;
+  label: string;
+  unit: string;
+}) {
+  const isOver = remaining < 0;
+  return (
+    <View style={styles.statItem}>
+      <Text style={[styles.statValue, isOver && styles.statValueOver]}>
+        {remaining}
+        {unit}
+      </Text>
+      <Text style={styles.statTarget}>
+        of {target}
+        {unit}
+      </Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
+  );
+}
 
 export default function HomeScreen({ navigation }: any) {
   const { user, token, logout } = useAuth();
-  const [target, setTarget] = useState<DailyTargetOut | null>(null);
-  const [loadingTarget, setLoadingTarget] = useState(true);
+  const [remaining, setRemaining] = useState<RemainingOut | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Re-fetch every time this screen comes into focus (not just on first
-  // mount) - so returning from the Daily Target screen after saving
-  // shows the updated values immediately, without a manual refresh.
+  // Re-fetch every time this screen comes into focus - so returning
+  // from Log Food (or Daily Target) shows the updated numbers
+  // immediately, without a manual refresh.
   useFocusEffect(
     useCallback(() => {
       if (!token) return;
       let cancelled = false;
-      setLoadingTarget(true);
-      getDailyTarget(token)
+      setLoading(true);
+      getRemaining(token)
         .then((result) => {
-          if (!cancelled) setTarget(result);
+          if (!cancelled) setRemaining(result);
         })
         .finally(() => {
-          if (!cancelled) setLoadingTarget(false);
+          if (!cancelled) setLoading(false);
         });
       return () => {
         cancelled = true;
@@ -40,30 +67,28 @@ export default function HomeScreen({ navigation }: any) {
 
         <View style={styles.divider} />
 
-        <Text style={styles.label}>Daily target</Text>
-        {loadingTarget ? (
+        <Text style={styles.sectionLabel}>Remaining today</Text>
+
+        {loading ? (
           <ActivityIndicator color={colors.primary} style={{ marginBottom: spacing.lg }} />
-        ) : target ? (
-          <View style={styles.targetGrid}>
-            <View style={styles.targetItem}>
-              <Text style={styles.targetValue}>{target.protein}g</Text>
-              <Text style={styles.targetLabel}>Protein</Text>
-            </View>
-            <View style={styles.targetItem}>
-              <Text style={styles.targetValue}>{target.carb}g</Text>
-              <Text style={styles.targetLabel}>Carbs</Text>
-            </View>
-            <View style={styles.targetItem}>
-              <Text style={styles.targetValue}>{target.fat}g</Text>
-              <Text style={styles.targetLabel}>Fat</Text>
-            </View>
-            <View style={styles.targetItem}>
-              <Text style={styles.targetValue}>{target.cal}</Text>
-              <Text style={styles.targetLabel}>Calories</Text>
-            </View>
+        ) : remaining ? (
+          <View style={styles.statsGrid}>
+            <MacroStat remaining={remaining.protein} target={remaining.target_protein} label="Protein" unit="g" />
+            <MacroStat remaining={remaining.carb} target={remaining.target_carb} label="Carbs" unit="g" />
+            <MacroStat remaining={remaining.fat} target={remaining.target_fat} label="Fat" unit="g" />
+            <MacroStat remaining={remaining.cal} target={remaining.target_cal} label="Calories" unit="" />
           </View>
         ) : (
-          <Text style={styles.noTarget}>No daily target set yet.</Text>
+          <Text style={styles.noTarget}>Set a daily target to see what's remaining.</Text>
+        )}
+
+        {remaining && (
+          <Pressable
+            style={({ pressed }) => [styles.primaryButton, pressed && styles.buttonPressed]}
+            onPress={() => navigation.navigate("LogFood")}
+          >
+            <Text style={styles.primaryButtonText}>Log food</Text>
+          </Pressable>
         )}
 
         <Pressable
@@ -71,7 +96,7 @@ export default function HomeScreen({ navigation }: any) {
           onPress={() => navigation.navigate("DailyTarget")}
         >
           <Text style={styles.secondaryButtonText}>
-            {target ? "Edit daily target" : "Set daily target"}
+            {remaining ? "Edit daily target" : "Set daily target"}
           </Text>
         </Pressable>
 
@@ -92,12 +117,22 @@ const styles = StyleSheet.create({
   eyebrow: { ...type.small, color: colors.textMuted, marginBottom: spacing.xs },
   email: { ...type.title, color: colors.text, marginBottom: spacing.lg },
   divider: { height: 1, backgroundColor: colors.border, marginBottom: spacing.lg },
-  label: { ...type.label, color: colors.textMuted, marginBottom: spacing.sm },
+  sectionLabel: { ...type.label, color: colors.textMuted, marginBottom: spacing.sm },
   noTarget: { ...type.body, color: colors.textMuted, marginBottom: spacing.lg, fontStyle: "italic" },
-  targetGrid: { flexDirection: "row", flexWrap: "wrap", marginBottom: spacing.lg, gap: spacing.md },
-  targetItem: { minWidth: 80 },
-  targetValue: { ...type.title, fontSize: 22, color: colors.text },
-  targetLabel: { ...type.small, color: colors.textMuted },
+  statsGrid: { flexDirection: "row", flexWrap: "wrap", marginBottom: spacing.lg, gap: spacing.lg },
+  statItem: { minWidth: 90 },
+  statValue: { ...type.title, fontSize: 24, color: colors.text },
+  statValueOver: { color: colors.error },
+  statTarget: { ...type.small, color: colors.textMuted },
+  statLabel: { ...type.small, color: colors.textMuted, marginTop: 2 },
+  primaryButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    paddingVertical: spacing.md,
+    alignItems: "center",
+    marginBottom: spacing.md,
+  },
+  primaryButtonText: { color: colors.surface, ...type.label, fontSize: 16 },
   secondaryButton: {
     borderWidth: 1,
     borderColor: colors.primary,
