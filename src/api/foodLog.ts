@@ -48,3 +48,32 @@ export async function getRemaining(token: string): Promise<RemainingOut | null> 
   }
   return response.json();
 }
+
+/**
+ * Returns ALL of today's entries, including already-reverted ones (the
+ * backend intentionally includes them so the client can show a
+ * history/strikethrough view rather than entries just vanishing).
+ */
+export async function getTodaysEntries(token: string): Promise<FoodLogOut[]> {
+  const response = await fetch(`${API_BASE_URL}/food-log/today`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseErrorMessage(response));
+  }
+  return response.json();
+}
+
+export async function revertFoodLogEntry(token: string, entryId: string): Promise<FoodLogOut> {
+  const response = await fetch(`${API_BASE_URL}/food-log/${entryId}/revert`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseErrorMessage(response));
+  }
+  return response.json();
+}
