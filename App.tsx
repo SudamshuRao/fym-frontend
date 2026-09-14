@@ -17,6 +17,7 @@ import PantryListScreen from "./src/screens/PantryListScreen";
 import PantryFormScreen from "./src/screens/PantryFormScreen";
 import CookRecommendationScreen from "./src/screens/CookRecommendationScreen";
 import EatOutRecommendationScreen from "./src/screens/EatOutRecommendationScreen";
+import PersonalizationScreen from "./src/screens/PersonalizationScreen";
 import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
@@ -79,6 +80,11 @@ function RootNavigator() {
             name="EatOutRecommendation"
             component={EatOutRecommendationScreen}
             options={{ headerShown: true, title: "Eat Out" }}
+          />
+          <Stack.Screen
+            name="Personalization"
+            component={PersonalizationScreen}
+            options={{ headerShown: true, title: "Preferences" }}
           />
         </>
       ) : (

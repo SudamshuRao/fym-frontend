@@ -120,6 +120,28 @@ export interface RecommendedItem {
   distance_km: number | null;
 }
 
+// Mirrors app/schemas/personalization.py exactly.
+export interface PreferenceSummaryOut {
+  prefers: string[];
+  avoids: string[];
+}
+
+export interface PersonalizationRefreshOut {
+  summary: PreferenceSummaryOut;
+  events_processed: number;
+}
+
+// Mirrors app/schemas/personalization.py exactly.
+export interface PreferenceSummaryOut {
+  prefers: string[];
+  avoids: string[];
+}
+
+export interface PersonalizationRefreshOut {
+  summary: PreferenceSummaryOut;
+  events_processed: number;
+}
+
 // Mirrors app/schemas/pantry_item.py exactly.
 export interface PantryItemOut {
   id: string;
