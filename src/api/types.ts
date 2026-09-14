@@ -106,6 +106,20 @@ export interface CookRecommendationOut {
   fit_score: number;
 }
 
+// Mirrors app/schemas/recommendation.py exactly.
+export interface RecommendedItem {
+  restaurant_id: string;
+  restaurant_name: string;
+  menu_item: string;
+  protein: number | null;
+  carb: number | null;
+  fat: number | null;
+  cal: number | null;
+  fit_score: number;
+  restaurant_nutrition_id: string;
+  distance_km: number | null;
+}
+
 // Mirrors app/schemas/pantry_item.py exactly.
 export interface PantryItemOut {
   id: string;

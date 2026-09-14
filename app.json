@@ -20,6 +20,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "FYM uses your location to find nearby restaurants that fit your macro budget."
+        }
+      ]
+    ]
   }
 }
