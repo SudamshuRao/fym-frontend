@@ -13,6 +13,8 @@ import DailyTargetScreen from "./src/screens/DailyTargetScreen";
 import LogFoodScreen from "./src/screens/LogFoodScreen";
 import TodaysFoodLogScreen from "./src/screens/TodaysFoodLogScreen";
 import StandaloneScreen from "./src/screens/StandaloneScreen";
+import PantryListScreen from "./src/screens/PantryListScreen";
+import PantryFormScreen from "./src/screens/PantryFormScreen";
 import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
@@ -55,6 +57,16 @@ function RootNavigator() {
             name="Standalone"
             component={StandaloneScreen}
             options={{ headerShown: true, title: "Quick Calculator" }}
+          />
+          <Stack.Screen
+            name="Pantry"
+            component={PantryListScreen}
+            options={{ headerShown: true, title: "Pantry" }}
+          />
+          <Stack.Screen
+            name="PantryForm"
+            component={PantryFormScreen}
+            options={{ headerShown: true, title: "Pantry Item" }}
           />
         </>
       ) : (

@@ -107,6 +107,13 @@ export default function HomeScreen({ navigation }: any) {
 
         <Pressable
           style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
+          onPress={() => navigation.navigate("Pantry")}
+        >
+          <Text style={styles.secondaryButtonText}>Pantry</Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
           onPress={() => navigation.navigate("DailyTarget")}
         >
           <Text style={styles.secondaryButtonText}>

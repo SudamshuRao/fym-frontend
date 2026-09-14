@@ -71,3 +71,32 @@ export interface AddToDailyOut {
   remaining_cal: number | null;
   message: string;
 }
+
+// Mirrors app/schemas/pantry_item.py exactly - only name is required,
+// everything else can be null if not provided.
+export interface PantryItemOut {
+  id: string;
+  name: string;
+  barcode: string | null;
+  quantity: number | null;
+  unit: string | null;
+  protein: number | null;
+  carb: number | null;
+  fat: number | null;
+  cal: number | null;
+  created_at: string;
+}
+
+// Mirrors app/schemas/pantry_item.py exactly.
+export interface PantryItemOut {
+  id: string;
+  name: string;
+  barcode: string | null;
+  quantity: number | null;
+  unit: string | null;
+  protein: number | null;
+  carb: number | null;
+  fat: number | null;
+  cal: number | null;
+  created_at: string;
+}
