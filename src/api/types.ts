@@ -87,6 +87,25 @@ export interface PantryItemOut {
   created_at: string;
 }
 
+// Mirrors app/schemas/cook.py exactly.
+export interface RecipeIngredientOut {
+  pantry_item_id: string;
+  name: string;
+  quantity_used: number;
+  unit: string;
+}
+
+export interface CookRecommendationOut {
+  recipe_name: string;
+  steps: string[];
+  ingredients_used: RecipeIngredientOut[];
+  protein: number;
+  carb: number;
+  fat: number;
+  cal: number;
+  fit_score: number;
+}
+
 // Mirrors app/schemas/pantry_item.py exactly.
 export interface PantryItemOut {
   id: string;

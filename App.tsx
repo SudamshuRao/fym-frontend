@@ -15,6 +15,7 @@ import TodaysFoodLogScreen from "./src/screens/TodaysFoodLogScreen";
 import StandaloneScreen from "./src/screens/StandaloneScreen";
 import PantryListScreen from "./src/screens/PantryListScreen";
 import PantryFormScreen from "./src/screens/PantryFormScreen";
+import CookRecommendationScreen from "./src/screens/CookRecommendationScreen";
 import { colors } from "./src/theme";
 
 const Stack = createNativeStackNavigator();
@@ -67,6 +68,11 @@ function RootNavigator() {
             name="PantryForm"
             component={PantryFormScreen}
             options={{ headerShown: true, title: "Pantry Item" }}
+          />
+          <Stack.Screen
+            name="CookRecommendation"
+            component={CookRecommendationScreen}
+            options={{ headerShown: true, title: "Cook" }}
           />
         </>
       ) : (
